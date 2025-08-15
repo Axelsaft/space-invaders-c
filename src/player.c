@@ -41,6 +41,8 @@ int player_draw(Player *player, Game *game) {
 }
 
 int player_free(Player *player) {
+   free(player->texture);
+   free(player);
    return 1;
 }
 

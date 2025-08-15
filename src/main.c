@@ -1,4 +1,5 @@
 #include "../include/player.h"
+#include "../include/enemy.h"
 #include "../include/game.h"
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
@@ -35,6 +36,13 @@ int main() {
    }
    player_init(p);
 
+   Enemy* e;
+   if (!enemy_create(&e, game)){
+      fprintf(stderr, "Failed to create enemy!");
+      return quit(-1, game);
+   }
+   enemy_init(e, 1);
+
    int done = 0;
    Uint64 n = SDL_GetPerformanceCounter();
    Uint64 o = SDL_GetPerformanceCounter();
@@ -51,6 +59,8 @@ int main() {
       SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
       SDL_RenderClear(game->renderer);
       
+      enemy_draw(e, game);
+
       //*** Player ***//
       player_move(p, delta);
       player_draw(p, game);
