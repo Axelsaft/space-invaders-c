@@ -1,4 +1,6 @@
 #include "../include/game.h"
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_render.h>
 #include <stdio.h>
 #include <SDL3/SDL.h>
 
@@ -36,4 +38,18 @@ int create_window(Game *game) {
    game->window = window;
    game->renderer = renderer;
    return 1;
+}
+
+int new_round(Game *game) {
+   return 1;
+}
+
+int game_loop(Game *game) {
+  int done = 0;
+  while (!done) {
+      if (game->enemies_counter == 0) {
+         if (!new_round(game)) return 0;
+      }
+   }
+  return 1;
 }
