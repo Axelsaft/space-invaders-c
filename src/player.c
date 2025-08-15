@@ -4,6 +4,7 @@
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
+#include <SDL3/SDL_scancode.h>
 #include <SDL3/SDL_surface.h>
 #include <stdlib.h>
 
@@ -68,5 +69,45 @@ int player_move(Player *player, double delta) {
    if ((player->x + player->width) > WIDTH) {
       player->x = WIDTH - player->width;
    }
+   return 1;
+}
+
+int player_shoot(Player *player, Game *game) {
+   const bool *keystates = SDL_GetKeyboardState(NULL);
+   if (!keystates) return 0;
+   if (!keystates[SDL_SCANCODE_SPACE]) return 0;
+   if (player->bullet_count>=10) return 0;
+   Bullet *b = calloc(1, sizeof(Bullet));
+   if (!b) return 0;
+   b->x = player->x + (player->width/2) - 2.5f;
+   b->y = player->y - player->height;
+   SDL_FRect rect = {b->x, b->y, 5, SPRITE_HEIGHT};
+   b->rect = rect;
+   int c = -1;
+   for (int i = 0; i < 10; i++) {
+      if (player->bullets[i] == NULL) {
+         c = i;
+         break;
+      }
+   }
+   if (c == -1) return 0;
+   player->bullets[c] = b;
+   player->bullet_count++;
+   return 1;
+}
+
+int bullet_move(Bullet **b, Player *p) {
+   (*b)->y -= SPRITE_HEIGHT;
+   if ((*b)->y <= 0) {
+      bullet_free(b);
+      p->bullet_count -= 1;
+      return 1;
+   }
+   return 1;
+}
+
+int bullet_free(Bullet **b) {
+   free(*b);
+   *b = NULL;
    return 1;
 }
