@@ -73,11 +73,10 @@ int game_loop(Game *game) {
 
 int game_move_enemies(Game *game) {
    if (game->enemies_counter == 0) return 0;
-   printf("Test");
    int c = game->enemies_counter-1;
    Enemy *e;
    float new_pos;
-   if (game->direction > 0) {
+   if (game->direction < 0) {
       for (int i = 63; i >= 0; i--) {
          if (game->enemies[i] != NULL) {
             e = game->enemies[i];
@@ -102,7 +101,9 @@ int game_move_enemies(Game *game) {
    } else {
       for (int i = 0; i<64; i++) {
          e = game->enemies[i];
-         e->x += e->width * game->direction;
+         if (e != NULL) {
+            e->x += e->width * game->direction;
+         }
       }
    }
    return 1;

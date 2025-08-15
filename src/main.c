@@ -61,7 +61,6 @@ int main() {
 
       if (move_timer > 0 && move_timer >= 60){
          move_timer = 0;
-         printf("HEEEEEEEEELP");
          game_move_enemies(game);
       }
       move_timer += 0.1 * delta;
