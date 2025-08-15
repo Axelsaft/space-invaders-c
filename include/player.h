@@ -1,8 +1,10 @@
+#pragma once
 #include "game.h"
 #include <SDL3/SDL_render.h>
-#ifndef PLAYER_H
 
-typedef struct {
+typedef struct Game Game;
+
+typedef struct Player {
    float x, y;
    float speed;
    SDL_Texture *texture;
@@ -19,4 +21,3 @@ int player_free(Player *);
 
 int player_move(Player *, double delta);
 
-#endif

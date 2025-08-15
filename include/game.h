@@ -1,24 +1,23 @@
+#pragma once
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
 
-#ifndef GAME_H
-#define GAME_H
-
 extern const int WIDTH;
 extern const int HEIGHT;
+extern const int SPRITE_WIDTH;
+extern const int SPRITE_HEIGHT;
 
-typedef struct {
-   int x;
-   int y;
-   SDL_Texture *texture;
-} Enemie;
+typedef struct Enemy Enemy;
 
-typedef struct {
+typedef struct Player Player;
+
+typedef struct Game {
    SDL_Window *window;
    SDL_Renderer *renderer;
    int round;
    int enemies_counter;
-   Enemie enemies[64];
+   Enemy *enemies[64];
+   int direction;
 } Game;
 
 int quit(int, Game *);
@@ -31,4 +30,4 @@ int new_round(Game *);
 
 int game_loop(Game *);
 
-#endif
+int game_move_enemies(Game *);

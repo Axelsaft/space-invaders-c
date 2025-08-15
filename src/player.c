@@ -1,4 +1,5 @@
 #include "../include/player.h"
+#include "../include/game.h"
 #include <SDL3/SDL_keyboard.h>
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_rect.h>
@@ -23,8 +24,8 @@ int player_create(Player **player, Game *game) {
 }
 
 int player_init(Player *player) {
-   player->height = 50;
-   player->width = 50;
+   player->height = SPRITE_WIDTH;
+   player->width = SPRITE_HEIGHT;
    
    player->x = ((float)WIDTH / 2) - (player->width/2);
    player->y = (float)HEIGHT - (player->height + (player->height/2));

@@ -1,12 +1,14 @@
+#include "../include/game.h"
 #include "../include/player.h"
 #include "../include/enemy.h"
-#include "../include/game.h"
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
 #include <stdio.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL.h>
 #include <stdlib.h>
+
+const int SPRITE_SIZE = 30;
 
 double get_delta(Uint64 *n, Uint64 *o) {
    *o = *n;
@@ -36,16 +38,12 @@ int main() {
    }
    player_init(p);
 
-   Enemy* e;
-   if (!enemy_create(&e, game)){
-      fprintf(stderr, "Failed to create enemy!");
-      return quit(-1, game);
-   }
-   enemy_init(e, 1);
-
+   float move_timer = 0;
    int done = 0;
    Uint64 n = SDL_GetPerformanceCounter();
    Uint64 o = SDL_GetPerformanceCounter();
+   
+   game->round = 4;
    while(!done) {
       double delta = get_delta(&n, &o);
       SDL_Event event;
@@ -56,16 +54,32 @@ int main() {
                break;
          }
       }
+
+      if (game->enemies_counter == 0) {
+         new_round(game);
+      }
+
+      if (move_timer > 0 && move_timer >= 60){
+         move_timer = 0;
+         printf("HEEEEEEEEELP");
+         game_move_enemies(game);
+      }
+      move_timer += 0.1 * delta;
+
+      // Rendering:
       SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
       SDL_RenderClear(game->renderer);
-      
-      enemy_draw(e, game);
-
       //*** Player ***//
       player_move(p, delta);
       player_draw(p, game);
       //*** ***//
 
+      //*** Enemy ***//
+      for (int i = 0; i < 64; i++) {
+         if(game->enemies[i] == NULL) continue;
+         enemy_draw(game->enemies[i], game);
+      }
+      //*** ***//
       SDL_RenderPresent(game->renderer);
    }
    return quit(0, game);

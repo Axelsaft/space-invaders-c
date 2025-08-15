@@ -1,4 +1,5 @@
 #include "../include/enemy.h"
+#include "../include/game.h"
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_surface.h>
@@ -18,8 +19,8 @@ int enemy_create(Enemy ** enemy, Game *game) {
 }
 
 int enemy_init(Enemy *enemy, int c) {
-   enemy->width = 20;
-   enemy->height = 20;
+   enemy->width = SPRITE_WIDTH;
+   enemy->height = SPRITE_HEIGHT;
 
    int max_c = (WIDTH / enemy->width)-1;
    int row = (int)floor((double)c / (double)max_c);
@@ -42,10 +43,7 @@ int enemy_draw(Enemy *enemy, Game *game) {
 }
 
 int enemy_free(Enemy *enemy) {
+   free(enemy->texture);
+   free(enemy);
    return 1;
 }
-
-int enemy_move(Enemy *enemy, int *end_of_screen) {
-   return 1;
-}
-

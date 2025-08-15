@@ -1,8 +1,9 @@
-#include "game.h"
+#pragma once
 #include <SDL3/SDL_render.h>
-#ifndef ENEMY_H
 
-typedef struct {
+typedef struct Game Game;
+
+typedef struct Enemy {
    float x, y;
    SDL_Texture *texture;
    float width, height;
@@ -16,6 +17,3 @@ int enemy_draw(Enemy *, Game *);
 
 int enemy_free(Enemy *);
 
-int enemy_move(Enemy *, int *);
-
-#endif
