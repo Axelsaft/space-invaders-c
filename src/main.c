@@ -37,7 +37,8 @@ int main() {
    }
    player_init(p);
 
-   float move_timer = 0;
+   float player_move_timer = 0;
+   float enemy_move_timer = 0;
    float bullet_shoot_timer = 0;
    float bullet_move_timer = 0;
 
@@ -62,11 +63,17 @@ int main() {
          new_round(game);
       }
 
-      if (move_timer > 0 && move_timer >= 60){
-         move_timer = 0;
+      if (player_move_timer <= 0) {
+         player_move(p, delta);
+         player_move_timer = 10;
+      }
+      player_move_timer -= 0.1 * delta;
+
+      if (enemy_move_timer > 0 && enemy_move_timer >= 60){
+         enemy_move_timer = 0;
          game_move_enemies(game);
       }
-      move_timer += 0.1 * delta;
+      enemy_move_timer += 0.1 * delta;
 
       if (bullet_shoot_timer > 0) {
          bullet_shoot_timer -= 0.1 * delta;
@@ -77,7 +84,7 @@ int main() {
          for (int i = 0; i < 10; i++) {
             Bullet *b = p->bullets[i];
             if (b == NULL) continue;
-            bullet_move(&p->bullets[i], p);
+            bullet_move(&p->bullets[i], p, game);
          }
       }
       bullet_move_timer -= 0.1 * delta;
@@ -87,7 +94,6 @@ int main() {
       SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
       SDL_RenderClear(game->renderer);
       //* Player *//
-      player_move(p, delta);
       if (bullet_shoot_timer <= 0 && player_shoot(p, game)) {
          bullet_shoot_timer = 30;
       }

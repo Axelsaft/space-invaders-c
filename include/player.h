@@ -31,6 +31,6 @@ int player_move(Player *, double delta);
 
 int player_shoot(Player *, Game *);
 
-int bullet_move(Bullet **, Player *);
+int bullet_move(Bullet **, Player *, Game *);
 
 int bullet_free(Bullet **);

@@ -1,3 +1,4 @@
+#include "../include/enemy.h"
 #include "../include/player.h"
 #include "../include/game.h"
 #include <SDL3/SDL_keyboard.h>
@@ -28,7 +29,7 @@ int player_init(Player *player) {
    player->height = SPRITE_WIDTH;
    player->width = SPRITE_HEIGHT;
    
-   player->x = ((float)WIDTH / 2) - (player->width/2);
+   player->x = ((float)WIDTH / 2); //- (player->width/2);
    player->y = (float)HEIGHT - (player->height + (player->height/2));
 
    player->speed = 0.5f;
@@ -59,7 +60,7 @@ int player_move(Player *player, double delta) {
       direction_x += DIRECTION_RIGHT;
    }
 
-   player->x += (player->speed * delta) * direction_x;
+   player->x += player->width * direction_x;
 
    // If too far on the left
    if (player->x < 0) {
@@ -96,8 +97,25 @@ int player_shoot(Player *player, Game *game) {
    return 1;
 }
 
-int bullet_move(Bullet **b, Player *p) {
+int bullet_move(Bullet **b, Player *p, Game *g) {
    (*b)->y -= SPRITE_HEIGHT;
+   for (int i = 0; i < 64; i++) {
+      Enemy *e = g->enemies[i];
+      if (e == NULL) continue; 
+      float b_y, b_x;
+      b_y = (*b)->y;
+      b_x = (*b)->x + ((float)SPRITE_WIDTH/2);
+      if (b_y >= e->y && b_y < e->y + e->height) {
+         if (b_x > e->x && b_x < e->x + e->width) {
+            bullet_free(b);
+            p->bullet_count -= 1;
+            enemy_free(e);
+            g->enemies[i] = NULL;
+            g->enemies_counter -= 1;
+            return 1;
+         }
+      }
+   }
    if ((*b)->y <= 0) {
       bullet_free(b);
       p->bullet_count -= 1;
